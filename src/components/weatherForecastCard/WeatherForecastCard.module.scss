@@ -1,0 +1,82 @@
+.weatherForecastCardContainer {
+    display: grid;
+    gap: 40px;
+    align-items: start;
+    font-size: 14px;
+    background: rgba(255,255,255,0.1);
+    border-radius: 10px;
+    padding: 20px 30px;
+    box-shadow: 0 25px 45px rgba(0,0,0,0.1);
+    text-align: center;
+        p {
+            line-height: 24px;
+        }
+        .mainTitle {
+            font-size: var(--fs-md);
+        }
+        .subTitle {
+            font-size: var(--fs-sm);
+        }
+        span {
+            font-style: italic;
+        }
+}
+
+.weatherForecastCardAdvancedContainer {
+    display: grid;
+    grid-template-columns: repeat(3, auto);
+    align-items: center;
+    font-weight: var(--fw-bold);
+}
+
+.weatherForecastCardAdvanced {
+    display: grid;
+}
+
+
+.weatherForecastCardBriefContainer {
+    display: grid;
+    grid-template-columns: auto max-content auto;
+    align-items: center;
+    gap: 10px;
+        .arrow {
+            width: 32px;
+            height: 32px;
+            fill: var(--white);
+                &:hover {
+                    cursor: pointer;
+                }
+            }
+            .unactive {
+                fill: rgba(255,255,255,0.1);
+            }
+        .rotate {
+            transform: rotate(180deg);
+        }
+}
+.weatherForecastCardBrief {
+    display: grid;
+    grid-template-columns: repeat(7, 120px);
+    align-items: center;
+    height: 180px;
+    font-size: 10px;
+    background: rgba(255,255,255,0.1);
+    border-radius: 10px;
+    padding: 20px 20px;
+    box-shadow: 0 25px 45px rgba(0,0,0,0.1);
+    text-align: center;
+        p {
+            line-height: 14px;
+        }
+        .brief {
+            display: grid;
+            grid-template-rows: 14px 14px 28px 50px 14px;
+            gap: 5px;
+            align-items: center;
+            justify-items: center;
+            border-right: 1px dotted var(--white);
+        }
+        :nth-child(7) {
+            border-right: none;
+        }
+}
