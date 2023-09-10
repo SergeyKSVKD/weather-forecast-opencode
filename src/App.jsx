@@ -6,9 +6,9 @@ function App() {
   return (
     <>
       <Provider store={store}>
-        <div className="App">
-          <WeatherForecast />
-          <Footer />
+        <div className='App'>
+          <WeatherForecast className='weatherForecast' />
+          <Footer className='footer' />
         </div>
       </Provider>
     </>

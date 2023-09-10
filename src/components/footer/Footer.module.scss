@@ -11,6 +11,11 @@
 
 .footer__wrapper {
     @include grid__mixin(center, center, none);
+    // position: fixed;
+    // left: 0;
+    // right: 0;
+    // bottom: 0;
+    // height: 48px;
 
     font-size: var(--fs-sm);
     color: var(--white)

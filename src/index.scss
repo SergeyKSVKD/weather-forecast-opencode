@@ -23,7 +23,7 @@
     line-height: var(--lh);
     background: var(--background);
     color: var(--white);
-    user-select: text;
+    user-select: none;
   }
   
   :root {
@@ -54,5 +54,21 @@
   }
 
   .App {
+    display: grid;
+    grid-template-rows: auto 48px;
+    grid-template-areas: 
+    "weatherForecast"
+    "footer";
     height: 100vh;
   }
+
+  .weatherForecast {
+    display: grid;
+    grid-area: weatherForecast;
+  }
+
+  .footer {
+    display: grid;
+    grid-area: footer;
+  }
+
