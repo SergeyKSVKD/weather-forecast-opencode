@@ -1,0 +1,1 @@
+GET https://api.openweathermap.org/data/2.5/forecast?lat=53.1951657&lon=50.1067691&units=metric&lang=ru&appid=af3e1d5d00bdffe56bab2254b4621cf6

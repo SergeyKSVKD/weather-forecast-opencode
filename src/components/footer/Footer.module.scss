@@ -1,0 +1,32 @@
+@mixin grid__mixin($ai, $jc, $ji) {
+    display: grid;
+    align-items: $ai;
+    @if ($jc != 'none') {
+        justify-content: $jc
+    }
+    @if ($ji != 'none') {
+        justify-items: $ji
+    };
+  }
+
+.footer__wrapper {
+    @include grid__mixin(center, center, none);
+
+    font-size: var(--fs-sm);
+    color: var(--white)
+}
+
+.copyright {
+    @include grid__mixin(center, center, none);
+}
+
+@media (max-width: 600px) {
+    .footer__wrapper {
+        margin: 30px 0;
+        gap: 10px;
+        padding: 0px 10px;
+    
+        font-size: var(--fs-mini);
+        font-weight: var(--fw-bold);
+    }
+}

@@ -1,0 +1,153 @@
+.background {
+    display: grid;
+    justify-content: center;
+    grid-template-rows: max-content max-content max-content;
+    gap: 10px;
+    z-index: 1;
+    width: 100vw;
+    height: calc(100vh - 60px);
+}
+
+.header {
+    display: grid;
+    grid-template-columns: 70px auto 24px;
+    align-items: center;
+    justify-content: center;
+    margin: 20px 0px;
+    gap: 10px;
+        svg {
+            width: 32px;
+            height: 32px;
+            fill: var(--white);
+                path {
+                    stroke: var(--white);
+                }
+        }
+        span {
+            width: max-content;
+            font-size: 24px;
+            font-weight: 700;
+        }
+        .logo {
+            img {
+                width: 70px;
+            }
+        }
+    }
+    
+.search__container {
+    display: grid;
+    grid-template-columns: repeat(2, auto);
+    gap: 10px;
+    align-items: top;
+    justify-content: center;
+}
+
+.input__container {
+    position: relative;
+}
+
+.close__button {
+    position: absolute;
+    top: 4px;
+    left: 275px;
+    color: rgba(255,255,255,0.8);
+        &:hover {
+            cursor: pointer;
+        }
+}
+
+.select {
+    height: 32px;
+    width: 300px;
+    background: rgba(255,255,255,0.3);
+    border-radius: 4px;
+    text-align: left;
+    z-index: 2;
+    font-size: 16px;
+    font-family: var(--family);
+    color: rgba(255,255,255,0.8);
+    padding: 10px 30px;
+    margin-bottom: 10px;
+    box-shadow: none;
+    border: none;
+    outline: none;
+        &::placeholder {
+            visibility: visible;
+            color: var(--white);
+            opacity: 0.5;
+        }
+        &:focus::placeholder {
+            visibility: hidden;
+            transition: 0.3s;
+            transform: scale(0);
+        }
+        &:hover {
+            cursor: pointer;
+        }
+}
+
+.disabled {
+    background: rgba(255,255,255,0.1);
+}
+
+.select__container {
+    visibility: hidden;
+    opacity: 0;
+    z-index: 2;
+    display: grid;
+    grid-template-rows: repeat(8, 34px);
+    gap: 8px;
+    height: 140px;
+    width: 300px;
+    overflow-y: scroll;
+    background: rgba(255,255,255,0.1);
+    border-top-left-radius: 10px;
+    border-bottom-left-radius: 10px;
+    padding: 10px 0;
+    box-shadow: 0 25px 45px rgba(0,0,0,0.1);
+        &.active {
+            visibility: visible;
+            opacity: 1;
+        }
+        &::-webkit-scrollbar-track {
+            background: rgba(255,255,255,0.1);
+        }
+        &::-webkit-scrollbar {
+            width: 15px;
+        }
+        &::-webkit-scrollbar-thumb {
+            background: var(--white);
+        }
+        p {
+            height: auto;
+            align-items: center;
+            justify-self: center;
+            width: 250px;
+            text-align: center;
+            color: rgba(255,255,255,0.8);
+            font-size: 16px;
+            padding: 5px 10px;
+        }
+        p:hover {
+            background-color: var(--orange);
+            border-radius: 4px;
+            cursor: pointer;
+        }
+}
+
+.weatherForecastCard {
+    display: grid;
+    grid-template-columns: auto auto;
+    gap: 20px;
+    align-items: start;
+    justify-content: space-between;
+    font-size: 12px;
+    width: 370px;
+    height: 310px;
+    background: rgba(255,255,255,0.1);
+    border-radius: 10px;
+    padding: 20px 30px;
+    box-shadow: 0 25px 45px rgba(0,0,0,0.1);
+    text-align: center;
+}
