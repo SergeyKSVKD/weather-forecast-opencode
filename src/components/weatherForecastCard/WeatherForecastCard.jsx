@@ -76,9 +76,16 @@ export const WeatherForecastCard = ({ props: {
             }
             {WeatherForecast.list ?
                 <div>
-                    <p className={styles.subTitle}>{WeatherForecast.list[0].weather[0].description.slice(0, 1).toUpperCase() + WeatherForecast.list[0].weather[0].description.slice(1, WeatherForecast.list[0].weather[0].description.length)}</p>
-                    <img src={`https://openweathermap.org/img/wn/` + WeatherForecast.list[0].weather[0].icon + `@2x.png`} alt={WeatherForecast.list[0].dt_txt} />
-                    <p className={styles.subTitle}><span>+{' '}{WeatherForecast.list[0].main.temp.toFixed(1)}&deg;C</span></p>
+                    {format(new Date(), 'yyyy-MM-dd H:mm:ss') < WeatherForecast.list[0].dt_txt ?
+                        <>
+                            <p className={styles.subTitle}>{WeatherForecast.list[0].weather[0].description.slice(0, 1).toUpperCase() + WeatherForecast.list[0].weather[0].description.slice(1, WeatherForecast.list[0].weather[0].description.length)}</p>
+                            <img src={`https://openweathermap.org/img/wn/` + WeatherForecast.list[0].weather[0].icon + `@2x.png`} alt={WeatherForecast.list[0].dt_txt} />
+                            <p className={styles.subTitle}><span>+{' '}{WeatherForecast.list[0].main.temp.toFixed(1)}&deg;C</span></p>
+                        </> : <>
+                            <p className={styles.subTitle}>{WeatherForecast.list[1].weather[0].description.slice(0, 1).toUpperCase() + WeatherForecast.list[1].weather[0].description.slice(1, WeatherForecast.list[1].weather[0].description.length)}</p>
+                            <img src={`https://openweathermap.org/img/wn/` + WeatherForecast.list[1].weather[0].icon + `@2x.png`} alt={WeatherForecast.list[1].dt_txt} />
+                            <p className={styles.subTitle}><span>+{' '}{WeatherForecast.list[1].main.temp.toFixed(1)}&deg;C</span></p>
+                        </>}
                 </div>
                 : null}
             {WeatherForecast.list ?
