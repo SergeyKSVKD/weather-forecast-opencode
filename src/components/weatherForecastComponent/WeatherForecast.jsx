@@ -5,10 +5,13 @@ import { useState, useEffect } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import { addRegions, loadWeatherForecast, removeWeatherForecast } from './weatherForecastSlice'
 import { ReactComponent as UmbrellaIcon } from './assets/umbrella.svg'
+import { WeatherForecastCard } from '../index'
+import { removeParams } from '../applicationParamsSlice'
 
 export const WeatherForecast = () => {
     const dispatch = useDispatch()
     const WeatherForecast = useSelector(state => state.weatherForecastState.weatherForecast)
+    const userParams = useSelector(state => state.userParams.applicationParams)
     const [regionsMap, setRegionsMap] = useState(null)
     const [regions, setRegions] = useState([])
     const [region, setRegion] = useState('')
@@ -17,7 +20,6 @@ export const WeatherForecast = () => {
     const [population, setPopulation] = useState(0)
     const filteredSlice = useSelector(state => state.regionsState.regions)
     const [activeCitySelector, changeActiveCitySelector] = useState(false)
-
 
     const initialInputState = {
         region: false,
@@ -73,6 +75,9 @@ export const WeatherForecast = () => {
             'lat': 0,
             'lon': 0,
         })
+        if (Object.entries(userParams).length !== 0) {
+            dispatch(removeParams())
+        }
     }
 
     function removeAllCityActivity() {
@@ -85,6 +90,9 @@ export const WeatherForecast = () => {
             'lat': 0,
             'lon': 0,
         })
+        if (Object.entries(userParams).length !== 0) {
+            dispatch(removeParams())
+        }
     }
 
     function stopEventBubbling(e) {
@@ -115,6 +123,14 @@ export const WeatherForecast = () => {
                             onChange={(e) => {
                                 setRegion(e.target.value)
                                 setRegions(() => filteredSlice.filter(item => item.toLocaleLowerCase().includes(e.target.value.toLocaleLowerCase())))
+                            }}
+                            onPaste={(e) => {
+                                e.preventDefault()
+                                setRegion(e.clipboardData.getData('Text'))
+                                if (e.clipboardData.getData('Text').length >= 4) {
+                                    changeActiveCitySelector(true)
+                                }
+                                setRegions(() => filteredSlice.filter(item => item.toLocaleLowerCase().includes(e.clipboardData.getData('Text').toLocaleLowerCase())))
                             }}
                             onClick={e => stopEventBubbling(e)}
                         />
@@ -155,9 +171,6 @@ export const WeatherForecast = () => {
                                 city: true,
                             })}
                             disabled={activeCitySelector ? '' : 'disabled'}
-                            // onChange={(e) => {
-                            //     setCity(e.target.value)
-                            // }}
                             onClick={e => stopEventBubbling(e)}
                         />
                         <span className={styles.close__button}
@@ -172,16 +185,19 @@ export const WeatherForecast = () => {
                         {cities ? cities.map((city, index) => {
                             return <p key={index + 1}
                                 onClick={() => {
-                                    setCity(city['Город'])
-                                    setPopulation(city['Население'])
-                                    changeInputState({
-                                        ...inputState,
-                                        city: false,
-                                    })
-                                    setQuery({
-                                        'lat': city['Широта'],
-                                        'lon': city['Долгота'],
-                                    })
+                                    setCity('')
+                                    setTimeout(() => {
+                                        setCity(city['Город'])
+                                        setPopulation(city['Население'])
+                                        changeInputState({
+                                            ...inputState,
+                                            city: false,
+                                        })
+                                        setQuery({
+                                            'lat': city['Широта'],
+                                            'lon': city['Долгота'],
+                                        })
+                                    }, [0])
                                 }}
                             >{city['Город']}</p>
                         }) : null
@@ -189,34 +205,8 @@ export const WeatherForecast = () => {
                     </div>
                 </div>
             </div>
-            {WeatherForecast.list ?
-                <div className={styles.weatherForecastCard}>
-                    {query.lon != 0 && query.lat != 0 ?
-                        <div>
-                            <p>{city}</p>
-                            <br />
-                            <p>{population > WeatherForecast.city.population ? population : WeatherForecast.city.population}</p>
-                            <br />
-                            <p>Широта: {query.lat}</p>
-                            <p>Долгота: {query.lon}</p>
-                        </div>
-                        : null
-                    }
-                    <div>
-                        {WeatherForecast.list ?
-                            <>
-                                <p>{WeatherForecast.list[0].dt_txt}</p>
-                                <p>{WeatherForecast.list[0].weather[0].description}</p>
-                                <img src={`https://openweathermap.org/img/wn/` + WeatherForecast.list[0].weather[0].icon + `@2x.png`} alt="" />
-                                <p>Температура:  +{' '}{WeatherForecast.list[0].main.temp}&deg;C</p>
-                                <p>Ощущается как: +{' '}{WeatherForecast.list[0].main.feels_like}&deg;C</p>
-                                <p>Давление: {Math.ceil(WeatherForecast.list[0].main.grnd_level * 0.750064)} мм рт. ст.</p>
-                                <p>Влажность: {WeatherForecast.list[0].main.humidity}%</p>
-                                <p>Ветер: {WeatherForecast.list[0].wind.speed} м/с</p>
-                            </>
-                            : null}
-                    </div>
-                </div>
+            {WeatherForecast.list && city ?
+                <WeatherForecastCard props={{ query, city, population }} />
                 : null}
         </div>
     </>
