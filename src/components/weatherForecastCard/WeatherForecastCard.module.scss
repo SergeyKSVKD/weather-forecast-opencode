@@ -36,9 +36,8 @@
 
 .weatherForecastCardBriefContainer {
     display: grid;
-    grid-template-columns: auto max-content auto;
+    grid-template-columns: auto auto max-content auto auto;
     align-items: center;
-    gap: 10px;
         .arrow {
             width: 32px;
             height: 32px;
@@ -54,16 +53,44 @@
             transform: rotate(180deg);
         }
 }
+
+.fixedLeftPanel {
+    width: 20px;
+    height: 220px;
+    background: rgba(255,255,255,0.1);
+    border-top-left-radius: 10px;
+    border-bottom-left-radius: 10px;
+    padding: 20px 0px;
+    z-index: 1;
+    box-shadow: 0 25px 45px rgba(0,0,0,0.1);
+
+}
+.fixedRightPanel {
+    width: 21px;
+    height: 220px;
+    background: rgba(255,255,255,0.1);
+    border-top-right-radius: 10px;
+    border-bottom-right-radius: 10px;
+    padding: 20px 0px;
+    z-index: 1;
+    box-shadow: 0 25px 45px rgba(0,0,0,0.1);
+}
+
+.weatherForecastCardBriefVisible {
+    width: 839px;
+    overflow: hidden;
+    background: rgba(255,255,255,0.1);
+    padding: 20px 0px;
+    box-shadow: 0 25px 45px rgba(0,0,0,0.1);
+}
+
 .weatherForecastCardBrief {
     display: grid;
-    grid-template-columns: repeat(7, 120px);
+    grid-template-columns: repeat(39, 120px);
     align-items: center;
     height: 180px;
     font-size: 10px;
-    background: rgba(255,255,255,0.1);
-    border-radius: 10px;
-    padding: 20px 20px;
-    box-shadow: 0 25px 45px rgba(0,0,0,0.1);
+    transition: 0.7s ease-in-out;
     text-align: center;
         p {
             line-height: 14px;
@@ -76,7 +103,7 @@
             justify-items: center;
             border-right: 1px dotted var(--white);
         }
-        :nth-child(7) {
-            border-right: none;
-        }
+        // :nth-child(7) {
+        //     border-right: none;
+        // }
 }

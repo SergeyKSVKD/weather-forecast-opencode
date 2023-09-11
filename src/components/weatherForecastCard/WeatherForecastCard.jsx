@@ -1,7 +1,7 @@
 import styles from './WeatherForecastCard.module.scss'
 import cn from 'classnames'
 import { useSelector, useDispatch } from 'react-redux'
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { ReactComponent as ArrowIcon } from './assets/arrow.svg'
 import { format } from 'date-fns'
 import { ru } from 'date-fns/locale'
@@ -20,6 +20,9 @@ export const WeatherForecastCard = ({ props: {
     let leftArrow = userParams.activeArrowButton.left
     let rightArrow = userParams.activeArrowButton.right
     const WeatherForecast = useSelector(state => state.weatherForecastState.weatherForecast)
+    const [weatherForecastSlice, setWeatherForecastSlice] = useState([])
+    const [count, setCount] = useState(1)
+    const [slide, setSlide] = useState(0)
 
     const variants = {
         hidden: { opacity: 0, scale: 0.7 },
@@ -59,6 +62,10 @@ export const WeatherForecastCard = ({ props: {
             }))
         }
     }, [start])
+
+    useEffect(() => {
+        setWeatherForecastSlice(WeatherForecast.list.slice(1, 40))
+    }, [])
 
     return <motion.div className={styles.weatherForecastCardContainer}
         variants={variants} initial={'hidden'} animate={'show'}>
@@ -108,6 +115,10 @@ export const WeatherForecastCard = ({ props: {
                     [styles.unactive]: leftArrow === false
                 })}
                     onClick={leftArrow ? () => {
+                        if (start > 1) {
+                            setCount(count - 1)
+                            setSlide((count -2) * (-360))
+                        }
                         dispatch(addSliderPosition({
                             start: start - 3,
                             end: end - 3,
@@ -116,22 +127,34 @@ export const WeatherForecastCard = ({ props: {
                         : null
                     }
                 />
-                <div className={styles.weatherForecastCardBrief}>
-                    {WeatherForecast.list.slice(start, end).map((timeSlice, index) => {
-                        return <div key={index} className={styles.brief}
-                        >
-                            <p>{dateFormat(timeSlice.dt_txt)}</p>
-                            <p>{timeSlice.dt_txt.slice(10, 16)}</p>
-                            <p>{timeSlice.weather[0].description}</p>
-                            <img src={`https://openweathermap.org/img/wn/` + timeSlice.weather[0].icon + `.png`} alt={timeSlice.dt_txt} />
-                            <p>+{' '}{timeSlice.main.temp.toFixed(1)}&deg;C</p>
-                        </div>
-                    })}
+                <div className={styles.fixedLeftPanel}></div>
+                <div className={styles.weatherForecastCardBriefVisible}>
+                    <div className={styles.weatherForecastCardBrief} style={{ transform: `translateX(${slide}px)` }}>
+                        {weatherForecastSlice.map((timeSlice, index) => {
+                            return <div key={index} className={styles.brief}
+                            >
+                                <p>{dateFormat(timeSlice.dt_txt)}</p>
+                                <p>{timeSlice.dt_txt.slice(10, 16)}</p>
+                                <p>{timeSlice.weather[0].description}</p>
+                                <img src={`https://openweathermap.org/img/wn/` + timeSlice.weather[0].icon + `.png`} alt={timeSlice.dt_txt} />
+                                <p>+{' '}{timeSlice.main.temp.toFixed(1)}&deg;C</p>
+                            </div>
+                        })}
+                    </div>
                 </div>
+                <div className={styles.fixedRightPanel}></div>
                 <ArrowIcon className={cn(styles.arrow, {
                     [styles.unactive]: rightArrow === false
                 })}
                     onClick={rightArrow ? () => {
+                        if (start <= 1) {
+                            setCount(count + 1)
+                            setSlide(count * (-360))
+                        }
+                        if (start > 1) {
+                            setCount(count + 1)
+                            setSlide(count * (-360))
+                        }
                         dispatch(addSliderPosition({
                             start: start + 3,
                             end: end + 3,
