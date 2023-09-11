@@ -23,6 +23,7 @@ export const WeatherForecastCard = ({ props: {
     const [weatherForecastSlice, setWeatherForecastSlice] = useState([])
     const [count, setCount] = useState(1)
     const [slide, setSlide] = useState(0)
+    const [currentWeatherForecast, setCurrentWeatherForecast] = useState(WeatherForecast.list ? WeatherForecast.list[0] : [])
 
     const variants = {
         hidden: { opacity: 0, scale: 0.7 },
@@ -71,7 +72,7 @@ export const WeatherForecastCard = ({ props: {
         variants={variants} initial={'hidden'} animate={'show'}>
         <div className={styles.weatherForecastCardAdvancedContainer}>
             {lon !== 0 && lat !== 0 ?
-                <div>
+                <div className={styles.weatherForecastCardAdvanced}>
                     <p className={styles.mainTitle}>{city}</p>
                     <br />
                     <p className={styles.subTitle}>Население: <span>{population > WeatherForecast.city.population ? population : WeatherForecast.city.population}</span></p>
@@ -83,11 +84,11 @@ export const WeatherForecastCard = ({ props: {
             }
             {WeatherForecast.list ?
                 <div>
-                    {format(new Date(), 'yyyy-MM-dd H:mm:ss') < WeatherForecast.list[0].dt_txt ?
+                    {format(new Date(), 'yyyy-MM-dd H:mm:ss') < currentWeatherForecast.dt_txt ?
                         <>
-                            <p className={styles.subTitle}>{WeatherForecast.list[0].weather[0].description.slice(0, 1).toUpperCase() + WeatherForecast.list[0].weather[0].description.slice(1, WeatherForecast.list[0].weather[0].description.length)}</p>
-                            <img src={`https://openweathermap.org/img/wn/` + WeatherForecast.list[0].weather[0].icon + `@2x.png`} alt={WeatherForecast.list[0].dt_txt} />
-                            <p className={styles.subTitle}><span>+{' '}{WeatherForecast.list[0].main.temp.toFixed(1)}&deg;C</span></p>
+                            <p className={styles.subTitle}>{currentWeatherForecast.weather[0].description.slice(0, 1).toUpperCase() + currentWeatherForecast.weather[0].description.slice(1, currentWeatherForecast.weather[0].description.length)}</p>
+                            <img src={`https://openweathermap.org/img/wn/` + currentWeatherForecast.weather[0].icon + `@2x.png`} alt={currentWeatherForecast.dt_txt} />
+                            <p className={styles.subTitle}><span>+{' '}{currentWeatherForecast.main.temp.toFixed(1)}&deg;C</span></p>
                         </> : <>
                             <p className={styles.subTitle}>{WeatherForecast.list[1].weather[0].description.slice(0, 1).toUpperCase() + WeatherForecast.list[1].weather[0].description.slice(1, WeatherForecast.list[1].weather[0].description.length)}</p>
                             <img src={`https://openweathermap.org/img/wn/` + WeatherForecast.list[1].weather[0].icon + `@2x.png`} alt={WeatherForecast.list[1].dt_txt} />
@@ -97,14 +98,13 @@ export const WeatherForecastCard = ({ props: {
                 : null}
             {WeatherForecast.list ?
                 <div className={styles.weatherForecastCardAdvanced}>
-                    {WeatherForecast.list.slice(0, 1).map((timeSlice) => {
-                        return <div key={'advanced'}>
-                            <p>Ощущается как: <span>+{' '}{timeSlice.main.feels_like.toFixed(1)}&deg;C</span></p>
-                            <p>Давление: <span>{Math.ceil(timeSlice.main.grnd_level * 0.750064)} мм рт. ст.</span></p>
-                            <p>Влажность: <span>{timeSlice.main.humidity}%</span></p>
-                            <p>Ветер: <span>{timeSlice.wind.speed} м/с</span></p>
-                        </div>
-                    })}
+                    {<div key={'advanced'}>
+                        <p>Ощущается как: <span>+{' '}{currentWeatherForecast.main.feels_like.toFixed(1)}&deg;C</span></p>
+                        <p>Давление: <span>{Math.ceil(currentWeatherForecast.main.grnd_level * 0.750064)} мм рт. ст.</span></p>
+                        <p>Влажность: <span>{currentWeatherForecast.main.humidity}%</span></p>
+                        <p>Ветер: <span>{currentWeatherForecast.wind.speed} м/с</span></p>
+                    </div>
+                    }
                 </div>
                 : null}
         </div>
@@ -117,7 +117,7 @@ export const WeatherForecastCard = ({ props: {
                     onClick={leftArrow ? () => {
                         if (start > 1) {
                             setCount(count - 1)
-                            setSlide((count -2) * (-360))
+                            setSlide((count - 2) * (-360))
                         }
                         dispatch(addSliderPosition({
                             start: start - 3,
@@ -132,6 +132,9 @@ export const WeatherForecastCard = ({ props: {
                     <div className={styles.weatherForecastCardBrief} style={{ transform: `translateX(${slide}px)` }}>
                         {weatherForecastSlice.map((timeSlice, index) => {
                             return <div key={index} className={styles.brief}
+                                onClick={() => {
+                                    setCurrentWeatherForecast(timeSlice)
+                                }}
                             >
                                 <p>{dateFormat(timeSlice.dt_txt)}</p>
                                 <p>{timeSlice.dt_txt.slice(10, 16)}</p>

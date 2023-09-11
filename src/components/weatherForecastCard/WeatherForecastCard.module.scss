@@ -24,13 +24,15 @@
 
 .weatherForecastCardAdvancedContainer {
     display: grid;
-    grid-template-columns: repeat(3, auto);
+    grid-template-columns: repeat(3, minmax(180px, auto));
     align-items: center;
+    justify-content: space-around;
     font-weight: var(--fw-bold);
 }
 
 .weatherForecastCardAdvanced {
     display: grid;
+    text-align: left;
 }
 
 
@@ -99,9 +101,14 @@
             display: grid;
             grid-template-rows: 14px 14px 28px 50px 14px;
             gap: 5px;
+            padding: 10px 0px;
             align-items: center;
             justify-items: center;
             border-right: 1px dotted var(--white);
+                &:hover {
+                    cursor: pointer;
+                    background: rgba(255,255,255,0.2);
+                }
         }
         // :nth-child(7) {
         //     border-right: none;
