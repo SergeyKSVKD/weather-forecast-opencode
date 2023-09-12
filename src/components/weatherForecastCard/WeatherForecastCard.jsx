@@ -68,6 +68,16 @@ export const WeatherForecastCard = ({ props: {
         setWeatherForecastSlice(WeatherForecast.list.slice(1, 40))
     }, [])
 
+    function currentWeatherForecasthandler() {
+        format(new Date(), 'yyyy-MM-dd H:mm:ss') < WeatherForecast.list[0].dt_txt ?
+            setCurrentWeatherForecast(WeatherForecast.list[0]) :
+            setCurrentWeatherForecast(WeatherForecast.list[1])
+    }
+
+    useEffect(() => {
+        currentWeatherForecasthandler()
+    }, [])
+
     return <motion.div className={styles.weatherForecastCardContainer}
         variants={variants} initial={'hidden'} animate={'show'}>
         <div className={styles.weatherForecastCardAdvancedContainer}>
@@ -82,20 +92,22 @@ export const WeatherForecastCard = ({ props: {
                 </div>
                 : null
             }
-            {WeatherForecast.list ?
-                <div>
-                    {format(new Date(), 'yyyy-MM-dd H:mm:ss') < currentWeatherForecast.dt_txt ?
-                        <>
-                            <p className={styles.subTitle}>{currentWeatherForecast.weather[0].description.slice(0, 1).toUpperCase() + currentWeatherForecast.weather[0].description.slice(1, currentWeatherForecast.weather[0].description.length)}</p>
-                            <img src={`https://openweathermap.org/img/wn/` + currentWeatherForecast.weather[0].icon + `@2x.png`} alt={currentWeatherForecast.dt_txt} />
-                            <p className={styles.subTitle}><span>+{' '}{currentWeatherForecast.main.temp.toFixed(1)}&deg;C</span></p>
-                        </> : <>
-                            <p className={styles.subTitle}>{WeatherForecast.list[1].weather[0].description.slice(0, 1).toUpperCase() + WeatherForecast.list[1].weather[0].description.slice(1, WeatherForecast.list[1].weather[0].description.length)}</p>
-                            <img src={`https://openweathermap.org/img/wn/` + WeatherForecast.list[1].weather[0].icon + `@2x.png`} alt={WeatherForecast.list[1].dt_txt} />
-                            <p className={styles.subTitle}><span>+{' '}{WeatherForecast.list[1].main.temp.toFixed(1)}&deg;C</span></p>
-                        </>}
-                </div>
-                : null}
+            {<div className={styles.subTitle}>
+                <p 
+                className={styles.nowButton}
+                onClick={() => {
+                    currentWeatherForecasthandler()
+                    setSlide(0)
+                    setCount(1)
+                    dispatch(addSliderPosition({
+                        start: 1,
+                        end: 8,
+                    }))
+                }}>Сейчас {format(new Date(), 'H:mm')}</p>
+                <p >{currentWeatherForecast.weather[0].description.slice(0, 1).toUpperCase() + currentWeatherForecast.weather[0].description.slice(1, currentWeatherForecast.weather[0].description.length)}</p>
+                <img src={`https://openweathermap.org/img/wn/` + currentWeatherForecast.weather[0].icon + `@2x.png`} alt={currentWeatherForecast.dt_txt} />
+                <p ><span>+{' '}{currentWeatherForecast.main.temp.toFixed(1)}&deg;C</span></p>
+            </div>}
             {WeatherForecast.list ?
                 <div className={styles.weatherForecastCardAdvanced}>
                     {<div key={'advanced'}>

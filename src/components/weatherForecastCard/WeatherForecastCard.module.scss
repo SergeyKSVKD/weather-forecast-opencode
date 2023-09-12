@@ -22,9 +22,20 @@
         }
 }
 
+.nowButton {
+    margin-bottom: 10px;
+    transform: scale(1);
+    transition: 0.2s ease-in-out;
+    text-transform: uppercase;
+        &:hover {
+            cursor: pointer;
+            transform: scale(1.05);
+        }
+}
+
 .weatherForecastCardAdvancedContainer {
     display: grid;
-    grid-template-columns: repeat(3, minmax(180px, auto));
+    grid-template-columns: repeat(3, minmax(200px, auto));
     align-items: center;
     justify-content: space-around;
     font-weight: var(--fw-bold);
