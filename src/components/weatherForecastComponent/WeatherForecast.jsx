@@ -1,12 +1,13 @@
 import citiesList from './cities.json'
 import styles from './WeatherForecast.module.scss'
 import cn from 'classnames'
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import { addRegions, loadWeatherForecast, removeWeatherForecast } from './weatherForecastSlice'
 import { ReactComponent as UmbrellaIcon } from './assets/umbrella.svg'
 import { WeatherForecastCard } from '../index'
 import { removeParams } from '../applicationParamsSlice'
+import { useDebounce } from '../../helpers/index'
 
 export const WeatherForecast = () => {
     const dispatch = useDispatch()
@@ -15,6 +16,8 @@ export const WeatherForecast = () => {
     const [regionsMap, setRegionsMap] = useState(null)
     const [regions, setRegions] = useState([])
     const [region, setRegion] = useState('')
+    const inputRef = useRef()
+    const debounceRegion = useDebounce(region, 500)
     const [cities, setCities] = useState([])
     const [city, setCity] = useState('')
     const [population, setPopulation] = useState(0)
@@ -45,7 +48,6 @@ export const WeatherForecast = () => {
         }
         const serializable = Object.fromEntries(regionsMap)
         dispatch(addRegions(regions))
-        setRegions(regions)
         setRegionsMap(regionsMap)
     }, [])
 
@@ -61,6 +63,15 @@ export const WeatherForecast = () => {
             dispatch(loadWeatherForecast(query))
         }
     }, [city])
+
+    useEffect(() => {
+        if (inputRef.current.value !== '') {
+            setRegions(() => filteredSlice.filter(item => item.toLocaleLowerCase().includes(inputRef.current.value.toLocaleLowerCase())))
+        }
+        else {
+            setRegions(filteredSlice)
+        }
+    }, [debounceRegion, filteredSlice])
 
     function removeAllActivity() {
         if (WeatherForecast.length != 0) {
@@ -114,6 +125,7 @@ export const WeatherForecast = () => {
                 <div>
                     <div className={styles.input__container}>
                         <input className={styles.select}
+                            ref={inputRef}
                             type='text' placeholder='Введите регион РФ'
                             value={region} name='region' autoComplete="off"
                             onFocus={() => changeInputState({
@@ -122,7 +134,7 @@ export const WeatherForecast = () => {
                             })}
                             onChange={(e) => {
                                 setRegion(e.target.value)
-                                setRegions(() => filteredSlice.filter(item => item.toLocaleLowerCase().includes(e.target.value.toLocaleLowerCase())))
+                                // setRegions(() => filteredSlice.filter(item => item.toLocaleLowerCase().includes(e.target.value.toLocaleLowerCase())))
                             }}
                             onPaste={(e) => {
                                 e.preventDefault()
