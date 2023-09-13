@@ -96,7 +96,7 @@
     opacity: 0;
     z-index: 2;
     display: grid;
-    grid-template-rows: repeat(8, 34px);
+    grid-template-rows: 34px;
     gap: 8px;
     height: 140px;
     width: 300px;
@@ -123,6 +123,7 @@
             height: auto;
             align-items: center;
             justify-self: center;
+            height: 34px;
             width: 250px;
             text-align: center;
             color: rgba(255,255,255,0.8);
@@ -134,4 +135,9 @@
             border-radius: 4px;
             cursor: pointer;
         }
+}
+
+.activeElement {
+    background-color: var(--orange);
+    border-radius: 4px;
 }

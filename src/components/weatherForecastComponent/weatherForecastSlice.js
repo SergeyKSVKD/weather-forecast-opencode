@@ -13,6 +13,10 @@ const initialStateRegions = {
     regions: [],
 }
 
+const initialStateCities = {
+    cities: [],
+}
+
 const initialStateWeatherForecast = {
     weatherForecast: [],
 }
@@ -23,6 +27,16 @@ const regionsSlice = createSlice({
     reducers: {
         addRegions: (state, action) => {
             state.regions = action.payload
+        }
+    }
+})
+
+const citiesSlice = createSlice({
+    name: '@@cities',
+    initialState: initialStateCities,
+    reducers: {
+        addCities: (state, action) => {
+            state.cities = action.payload
         }
     }
 })
@@ -43,6 +57,8 @@ const weatherForecastSlice = createSlice({
 })
 
 export const { addRegions } = regionsSlice.actions
+export const { addCities } = citiesSlice.actions
 export const { removeWeatherForecast } = weatherForecastSlice.actions
 export const regionsReducer = regionsSlice.reducer
+export const citiesReducer = citiesSlice.reducer
 export const weatherForecastReducer = weatherForecastSlice.reducer

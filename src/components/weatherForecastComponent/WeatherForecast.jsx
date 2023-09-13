@@ -3,7 +3,7 @@ import styles from './WeatherForecast.module.scss'
 import cn from 'classnames'
 import { useState, useEffect, useRef } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
-import { addRegions, loadWeatherForecast, removeWeatherForecast } from './weatherForecastSlice'
+import { addRegions, addCities, loadWeatherForecast, removeWeatherForecast } from './weatherForecastSlice'
 import { ReactComponent as UmbrellaIcon } from './assets/umbrella.svg'
 import { WeatherForecastCard } from '../index'
 import { removeParams } from '../applicationParamsSlice'
@@ -17,11 +17,14 @@ export const WeatherForecast = () => {
     const [regions, setRegions] = useState([])
     const [region, setRegion] = useState('')
     const inputRef = useRef()
-    const debounceRegion = useDebounce(region, 500)
+    const inputCityRef = useRef()
     const [cities, setCities] = useState([])
     const [city, setCity] = useState('')
     const [population, setPopulation] = useState(0)
+    const debounceRegion = useDebounce(region, 500)
+    const debounceCity = useDebounce(city, 500)
     const filteredSlice = useSelector(state => state.regionsState.regions)
+    const filteredCitiesSlice = useSelector(state => state.citiesState.cities)
     const [activeCitySelector, changeActiveCitySelector] = useState(false)
 
     const initialInputState = {
@@ -54,7 +57,7 @@ export const WeatherForecast = () => {
     useEffect(() => {
         if (activeCitySelector && region.length >= 4) {
             const cities = regionsMap.get(region)
-            setCities(cities);
+            dispatch(addCities(cities))
         }
     }, [region, city])
 
@@ -72,6 +75,15 @@ export const WeatherForecast = () => {
             setRegions(filteredSlice)
         }
     }, [debounceRegion, filteredSlice])
+
+    useEffect(() => {
+        if (inputCityRef.current.value !== '') {
+            setCities(() => filteredCitiesSlice.filter(item => item['Город'].toLocaleLowerCase().includes(inputCityRef.current.value.toLocaleLowerCase())))
+        }
+        else {
+            setCities(filteredCitiesSlice)
+        }
+    }, [debounceCity, filteredCitiesSlice])
 
     function removeAllActivity() {
         if (WeatherForecast.length != 0) {
@@ -109,6 +121,24 @@ export const WeatherForecast = () => {
     function stopEventBubbling(e) {
         e.stopPropagation()
     }
+
+    useEffect(() => {
+        document.querySelectorAll('[data-city]').forEach(item => {
+            if (item.innerHTML === city) {
+                item.classList.add(`${styles.activeElement}`)
+            }
+            else { item.classList.remove(`${styles.activeElement}`) }
+        })
+    }, [cities, city])
+   
+    useEffect(() => {
+        document.querySelectorAll('[data-region]').forEach(item => {
+            if (item.innerHTML === region) {
+                item.classList.add(`${styles.activeElement}`)
+            }
+            else { item.classList.remove(`${styles.activeElement}`) }
+        })
+    }, [regions, region])
 
     return <>
         <div className={styles.background}
@@ -157,6 +187,7 @@ export const WeatherForecast = () => {
                     >
                         {regions.map((region, index) => {
                             return <p key={index + 1}
+                            data-region={region}
                                 onClick={() => {
                                     setRegion(region)
                                     changeActiveCitySelector(true)
@@ -176,8 +207,12 @@ export const WeatherForecast = () => {
                         <input className={cn(styles.select, {
                             [styles.disabled]: !activeCitySelector
                         })}
+                            ref={inputCityRef}
                             type='text' placeholder='Выберите город'
                             value={city} name='city' autoComplete="off"
+                            onChange={(e) => {
+                                setCity(e.target.value)
+                            }}
                             onFocus={() => changeInputState({
                                 ...inputState,
                                 city: true,
@@ -196,6 +231,7 @@ export const WeatherForecast = () => {
                     >
                         {cities ? cities.map((city, index) => {
                             return <p key={index + 1}
+                                data-city={city['Город']}
                                 onClick={() => {
                                     setCity('')
                                     setTimeout(() => {
