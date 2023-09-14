@@ -20,12 +20,28 @@ export const WeatherForecast = () => {
     const inputCityRef = useRef()
     const [cities, setCities] = useState([])
     const [city, setCity] = useState('')
+    const [cityTitle, setCityTitle] = useState('')
     const [population, setPopulation] = useState(0)
     const debounceRegion = useDebounce(region, 500)
-    const debounceCity = useDebounce(city, 500)
     const filteredSlice = useSelector(state => state.regionsState.regions)
-    const filteredCitiesSlice = useSelector(state => state.citiesState.cities)
     const [activeCitySelector, changeActiveCitySelector] = useState(false)
+    const scrollRef = useRef()
+
+    function scrollToId(itemId) {
+        const map = getMap();
+        const node = map.get(itemId);
+        node.scrollIntoView({
+            behavior: 'smooth',
+            block: 'center',
+        });
+    }
+
+    function getMap() {
+        if (!scrollRef.current) {
+            scrollRef.current = new Map();
+        }
+        return scrollRef.current;
+    }
 
     const initialInputState = {
         region: false,
@@ -58,6 +74,7 @@ export const WeatherForecast = () => {
         if (activeCitySelector && region.length >= 4) {
             const cities = regionsMap.get(region)
             dispatch(addCities(cities))
+            setCities(cities)
         }
     }, [region, city])
 
@@ -75,15 +92,6 @@ export const WeatherForecast = () => {
             setRegions(filteredSlice)
         }
     }, [debounceRegion, filteredSlice])
-
-    useEffect(() => {
-        if (inputCityRef.current.value !== '') {
-            setCities(() => filteredCitiesSlice.filter(item => item['Город'].toLocaleLowerCase().includes(inputCityRef.current.value.toLocaleLowerCase())))
-        }
-        else {
-            setCities(filteredCitiesSlice)
-        }
-    }, [debounceCity, filteredCitiesSlice])
 
     function removeAllActivity() {
         if (WeatherForecast.length != 0) {
@@ -124,16 +132,16 @@ export const WeatherForecast = () => {
 
     useEffect(() => {
         document.querySelectorAll('[data-city]').forEach(item => {
-            if (item.innerHTML === city) {
+            if (item.innerHTML.toLocaleLowerCase() === city.toLocaleLowerCase()) {
                 item.classList.add(`${styles.activeElement}`)
             }
             else { item.classList.remove(`${styles.activeElement}`) }
         })
     }, [cities, city])
-   
+
     useEffect(() => {
         document.querySelectorAll('[data-region]').forEach(item => {
-            if (item.innerHTML === region) {
+            if (item.innerHTML.toLocaleLowerCase() === region.toLocaleLowerCase()) {
                 item.classList.add(`${styles.activeElement}`)
             }
             else { item.classList.remove(`${styles.activeElement}`) }
@@ -164,7 +172,6 @@ export const WeatherForecast = () => {
                             })}
                             onChange={(e) => {
                                 setRegion(e.target.value)
-                                // setRegions(() => filteredSlice.filter(item => item.toLocaleLowerCase().includes(e.target.value.toLocaleLowerCase())))
                             }}
                             onPaste={(e) => {
                                 e.preventDefault()
@@ -187,7 +194,7 @@ export const WeatherForecast = () => {
                     >
                         {regions.map((region, index) => {
                             return <p key={index + 1}
-                            data-region={region}
+                                data-region={region}
                                 onClick={() => {
                                     setRegion(region)
                                     changeActiveCitySelector(true)
@@ -210,6 +217,7 @@ export const WeatherForecast = () => {
                             ref={inputCityRef}
                             type='text' placeholder='Выберите город'
                             value={city} name='city' autoComplete="off"
+                            readOnly="readonly"
                             onChange={(e) => {
                                 setCity(e.target.value)
                             }}
@@ -231,21 +239,33 @@ export const WeatherForecast = () => {
                     >
                         {cities ? cities.map((city, index) => {
                             return <p key={index + 1}
+                                ref={(node) => {
+                                    const map = getMap();
+                                    if (node) {
+                                        map.set(city['Город'], node);
+                                    } else {
+                                        map.delete(city['Город']);
+                                    }
+                                }}
                                 data-city={city['Город']}
                                 onClick={() => {
                                     setCity('')
                                     setTimeout(() => {
                                         setCity(city['Город'])
+                                        setCityTitle(city['Город'])
                                         setPopulation(city['Население'])
-                                        changeInputState({
-                                            ...inputState,
-                                            city: false,
-                                        })
                                         setQuery({
                                             'lat': city['Широта'],
                                             'lon': city['Долгота'],
                                         })
+                                        scrollToId(city['Город'])
                                     }, [0])
+                                    setTimeout(() => {
+                                        changeInputState({
+                                            ...inputState,
+                                            city: false,
+                                        })
+                                    }, [200])
                                 }}
                             >{city['Город']}</p>
                         }) : null
@@ -254,7 +274,7 @@ export const WeatherForecast = () => {
                 </div>
             </div>
             {WeatherForecast.list && city ?
-                <WeatherForecastCard props={{ query, city, population }} />
+                <WeatherForecastCard props={{ query, cityTitle, population }} />
                 : null}
         </div>
     </>

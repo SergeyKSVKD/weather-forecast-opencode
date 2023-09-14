@@ -10,7 +10,7 @@ import { motion } from 'framer-motion'
 
 export const WeatherForecastCard = ({ props: {
     query: { lat, lon },
-    city,
+    cityTitle: city,
     population, }
 }) => {
     const dispatch = useDispatch()
