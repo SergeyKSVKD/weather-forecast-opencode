@@ -26,10 +26,10 @@ export const WeatherForecastCard = ({ props: {
     const [currentWeatherForecast, setCurrentWeatherForecast] = useState(WeatherForecast.list ? WeatherForecast.list[0] : [])
 
     const variants = {
-        hidden: { opacity: 0, scale: 0.7 },
+        hidden: { opacity: 0.5, translateX: -1500 },
         show: {
             opacity: 1,
-            scale: 1,
+            translateX: 0,
             transition: {
                 delay: 0.2,
                 duration: 0.5

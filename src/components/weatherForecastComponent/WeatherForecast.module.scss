@@ -38,6 +38,7 @@
 .search__container {
     display: grid;
     grid-template-columns: repeat(2, auto);
+    height: 182px;
     gap: 10px;
     align-items: top;
     justify-content: center;
@@ -98,7 +99,7 @@
     display: grid;
     grid-template-rows: 34px;
     gap: 8px;
-    height: 140px;
+    height: 0px;
     width: 300px;
     overflow-y: scroll;
     background: rgba(255,255,255,0.1);
@@ -108,6 +109,7 @@
     transition: 0.5s ease-in-out;
     box-shadow: 0 25px 45px rgba(0,0,0,0.1);
         &.active {
+            height: 140px;
             visibility: visible;
             opacity: 1;
         }

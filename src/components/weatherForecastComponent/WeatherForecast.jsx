@@ -262,7 +262,7 @@ export const WeatherForecast = () => {
                                     }, [0])
                                     setTimeout(() => {
                                         changeInputState({
-                                            ...inputState,
+                                            region: false,
                                             city: false,
                                         })
                                     }, [200])
