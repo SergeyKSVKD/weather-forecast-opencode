@@ -5,13 +5,15 @@ import { useState, useEffect, useRef } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import { addRegions, addCities, loadWeatherForecast, removeWeatherForecast } from './weatherForecastSlice'
 import { ReactComponent as UmbrellaIcon } from './assets/umbrella.svg'
-import { WeatherForecastCard } from '../index'
+import { WeatherForecastCard, Preloader } from '../index'
 import { removeParams } from '../applicationParamsSlice'
 import { useDebounce } from '../../helpers/index'
 
 export const WeatherForecast = () => {
     const dispatch = useDispatch()
-    const WeatherForecast = useSelector(state => state.weatherForecastState.weatherForecast)
+    const WeatherForecast = useSelector(state => state.weatherForecastState.weatherForecast.info)
+    const error = useSelector(state => state.weatherForecastState.weatherForecast.error)
+    const loading = useSelector(state => state.weatherForecastState.weatherForecast.loading)
     const userParams = useSelector(state => state.userParams.applicationParams)
     const [regionsMap, setRegionsMap] = useState(null)
     const [regions, setRegions] = useState([])
@@ -28,8 +30,8 @@ export const WeatherForecast = () => {
     const scrollRef = useRef()
 
     function scrollToId(itemId) {
-        const map = getMap();
-        const node = map.get(itemId);
+        const map = getMap()
+        const node = map.get(itemId)
         node.scrollIntoView({
             behavior: 'smooth',
             block: 'center',
@@ -94,7 +96,7 @@ export const WeatherForecast = () => {
     }, [debounceRegion, filteredSlice])
 
     function removeAllActivity() {
-        if (WeatherForecast.length != 0) {
+        if (WeatherForecast.length !== 0) {
             dispatch(removeWeatherForecast())
         }
         changeActiveCitySelector(false)
@@ -112,7 +114,7 @@ export const WeatherForecast = () => {
     }
 
     function removeAllCityActivity() {
-        if (WeatherForecast.length != 0) {
+        if (WeatherForecast.length !== 0) {
             dispatch(removeWeatherForecast())
         }
         setCity('')
@@ -259,6 +261,7 @@ export const WeatherForecast = () => {
                                             'lon': city['Долгота'],
                                         })
                                         scrollToId(city['Город'])
+                                        dispatch(removeParams())
                                     }, [0])
                                     setTimeout(() => {
                                         changeInputState({
@@ -273,9 +276,11 @@ export const WeatherForecast = () => {
                     </div>
                 </div>
             </div>
-            {WeatherForecast.list && city ?
+            {WeatherForecast.length !== 0 && city && !error ?
                 <WeatherForecastCard props={{ query, cityTitle, population }} />
                 : null}
+            {error ? <div className={styles.error__container}>{error}</div> : null}
+            {loading === 'loading' ? <Preloader /> : null}
         </div>
     </>
 }

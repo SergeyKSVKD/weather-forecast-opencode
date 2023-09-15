@@ -31,11 +31,6 @@ const applicationParamsSlice = createSlice({
                 right,
             }
         },
-        // addParams: (state, action) => {
-        //     for (let key in action.payload) {
-        //         state.applicationParams[key] = action.payload[key]
-        //     }
-        // },
         removeParams: (state) => {
             state.applicationParams = initialState.applicationParams
         },

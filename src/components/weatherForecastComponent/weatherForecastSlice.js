@@ -2,10 +2,15 @@ import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
 
 export const loadWeatherForecast = createAsyncThunk(
     '@@WeatherForecast/get-all-info',
-    async ({ lat, lon }) => {
+    async ({ lat = 0, lon = 0 }, { dispatch }) => {
         const res = await fetch(`${process.env.REACT_APP_API_URL}lat=${lat}&lon=${lon}${process.env.REACT_APP_API_KEY}`)
         const data = await res.json()
-        return data
+        if (data.cod === '200') {
+            return data
+        }
+        else {
+            throw new Error(`Неверный запрос! Ошибка ${data.cod}: "${data.message}"`)
+        }
     }
 )
 
@@ -18,7 +23,11 @@ const initialStateCities = {
 }
 
 const initialStateWeatherForecast = {
-    weatherForecast: [],
+    weatherForecast: {
+        info: [],
+        loading: 'idle',
+        error: ''
+    },
 }
 
 const regionsSlice = createSlice({
@@ -46,13 +55,25 @@ const weatherForecastSlice = createSlice({
     initialState: initialStateWeatherForecast,
     reducers: {
         removeWeatherForecast: (state) => {
-            state.weatherForecast = []
+            state.weatherForecast = initialStateWeatherForecast.weatherForecast
         }
     },
     extraReducers: (builder) => {
-        builder.addCase(loadWeatherForecast.fulfilled, (state, action) => {
-            state.weatherForecast = action.payload
-        })
+        builder
+            .addCase(loadWeatherForecast.pending, (state) => {
+                state.weatherForecast.info = []
+                state.weatherForecast.loading = 'loading'
+            })
+            .addCase(loadWeatherForecast.fulfilled, (state, action) => {
+                console.log(action);
+                state.weatherForecast.info = action.payload
+                state.weatherForecast.loading = 'idle'
+                state.weatherForecast.error = ''
+            })
+            .addCase(loadWeatherForecast.rejected, (state, action) => {
+                state.weatherForecast.loading = 'idle'
+                state.weatherForecast.error = action.error.message !== 'Failed to fetch' ? action.error.message : '« Сервис временно недоступен! »'
+            })
     }
 })
 
