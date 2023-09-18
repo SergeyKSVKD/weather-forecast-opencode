@@ -12,4 +12,7 @@ export const store = configureStore({
         userParams: applicationParamsReducer,
     },
     devTools: true,
+    middleware: (getDefaultMiddleware) => getDefaultMiddleware({
+        trace: true,
+    })
 })
