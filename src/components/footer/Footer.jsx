@@ -1,6 +1,6 @@
 import styles from './Footer.module.scss'
 import { format } from 'date-fns'
-import { useResize } from '../../helpers/index'
+import { useResize } from '../../shared/helpers/index'
 
 export const Footer = () => {
 

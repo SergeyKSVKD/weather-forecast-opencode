@@ -1,0 +1,26 @@
+.header {
+    display: grid;
+    grid-template-columns: 70px auto 24px;
+    align-items: center;
+    justify-content: center;
+    margin: 20px 0px;
+    gap: 10px;
+        svg {
+            width: 32px;
+            height: 32px;
+            fill: var(--white);
+                path {
+                    stroke: var(--white);
+                }
+        }
+        span {
+            width: max-content;
+            font-size: 24px;
+            font-weight: 700;
+        }
+        .logo {
+            img {
+                width: 70px;
+            }
+        }
+    }

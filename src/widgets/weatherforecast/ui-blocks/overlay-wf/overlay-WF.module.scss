@@ -1,0 +1,8 @@
+.background {
+    display: grid;
+    justify-content: center;
+    grid-template-rows: max-content max-content max-content;
+    gap: 10px;
+    z-index: 1;
+    margin-bottom: 30px;
+}

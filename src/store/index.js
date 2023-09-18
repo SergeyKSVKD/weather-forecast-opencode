@@ -1,6 +1,8 @@
 import { configureStore } from "@reduxjs/toolkit";
-import { regionsReducer, citiesReducer, weatherForecastReducer } from '../components/weatherForecastComponent/weatherForecastSlice'
-import { applicationParamsReducer } from '../components/applicationParamsSlice'
+import { applicationParamsReducer } from '../widgets/weatherforecast/features/store-slice/applicationParamsSlice'
+import { citiesReducer } from '../widgets/weatherforecast/features/store-slice/citiesSlice'
+import { regionsReducer } from '../widgets/weatherforecast/features/store-slice/regionsSlice'
+import { weatherForecastReducer } from '../widgets/weatherforecast/features/store-slice/weatherForecastSlice'
 
 export const store = configureStore({
     reducer: {

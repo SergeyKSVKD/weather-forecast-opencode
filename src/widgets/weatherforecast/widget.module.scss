@@ -1,0 +1,18 @@
+.App {
+    display: grid;
+    grid-template-rows: auto 48px;
+    grid-template-areas: 
+    "weatherForecast"
+    "footer";
+    height: 100vh;
+  }
+
+.weatherForecast {
+  display: grid;
+  grid-area: weatherForecast;
+}
+
+.footer {
+  display: grid;
+  grid-area: footer;
+}

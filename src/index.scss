@@ -1,8 +1,8 @@
 @font-face {
     font-family: 'rubik';
-    src: url('./fonts/rubik-regular-webfont.woff2') format('woff2'),
-         url('./fonts/rubik-regular-webfont.woff') format('woff'),
-         url('./fonts/rubik-regular-webfont.ttf') format('ttf');
+    src: url('./shared/fonts/rubik-regular-webfont.woff2') format('woff2'),
+         url('./shared/fonts/rubik-regular-webfont.woff') format('woff'),
+         url('./shared/fonts/rubik-regular-webfont.ttf') format('ttf');
     font-weight: normal;
     font-style: normal;
   }
@@ -52,23 +52,3 @@
     10px 10px 10px rgba(0, 0, 0, 0.3), 
     inset -20px -20px 25px rgba(255, 255, 255, 0.09);
   }
-
-  .App {
-    display: grid;
-    grid-template-rows: auto 48px;
-    grid-template-areas: 
-    "weatherForecast"
-    "footer";
-    height: 100vh;
-  }
-
-  .weatherForecast {
-    display: grid;
-    grid-area: weatherForecast;
-  }
-
-  .footer {
-    display: grid;
-    grid-area: footer;
-  }
-

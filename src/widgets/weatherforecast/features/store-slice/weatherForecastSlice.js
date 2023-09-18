@@ -1,7 +1,16 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
 
+const initialStateWeatherForecast = {
+    weatherForecast: {
+        info: [],
+        current: { now: {}, selected: {}, },
+        loading: 'idle',
+        error: ''
+    },
+}
+
 export const loadWeatherForecast = createAsyncThunk(
-    '@@WeatherForecast/get-all-info',
+    '@@weather-forecast/get-all-info',
     async ({ lat = 0, lon = 0 }, { dispatch }) => {
         const res = await fetch(`${process.env.REACT_APP_API_URL}lat=${lat}&lon=${lon}${process.env.REACT_APP_API_KEY}`)
         const data = await res.json()
@@ -14,46 +23,17 @@ export const loadWeatherForecast = createAsyncThunk(
     }
 )
 
-const initialStateRegions = {
-    regions: [],
-}
-
-const initialStateCities = {
-    cities: [],
-}
-
-const initialStateWeatherForecast = {
-    weatherForecast: {
-        info: [],
-        loading: 'idle',
-        error: ''
-    },
-}
-
-const regionsSlice = createSlice({
-    name: '@@regions',
-    initialState: initialStateRegions,
-    reducers: {
-        addRegions: (state, action) => {
-            state.regions = action.payload
-        }
-    }
-})
-
-const citiesSlice = createSlice({
-    name: '@@cities',
-    initialState: initialStateCities,
-    reducers: {
-        addCities: (state, action) => {
-            state.cities = action.payload
-        }
-    }
-})
-
 const weatherForecastSlice = createSlice({
-    name: '@@weatherForecast',
+    name: '@@weather-forecast',
     initialState: initialStateWeatherForecast,
     reducers: {
+        addCurrent: (state, action) => {
+            state.weatherForecast.current.now = action.payload
+            state.weatherForecast.current.selected = {}
+        },
+        addSelected: (state,action) => {
+            state.weatherForecast.current.selected = action.payload
+        },
         removeWeatherForecast: (state) => {
             state.weatherForecast = initialStateWeatherForecast.weatherForecast
         }
@@ -65,7 +45,6 @@ const weatherForecastSlice = createSlice({
                 state.weatherForecast.loading = 'loading'
             })
             .addCase(loadWeatherForecast.fulfilled, (state, action) => {
-                console.log(action);
                 state.weatherForecast.info = action.payload
                 state.weatherForecast.loading = 'idle'
                 state.weatherForecast.error = ''
@@ -77,9 +56,5 @@ const weatherForecastSlice = createSlice({
     }
 })
 
-export const { addRegions } = regionsSlice.actions
-export const { addCities } = citiesSlice.actions
-export const { removeWeatherForecast } = weatherForecastSlice.actions
-export const regionsReducer = regionsSlice.reducer
-export const citiesReducer = citiesSlice.reducer
+export const { addCurrent, addSelected, removeWeatherForecast } = weatherForecastSlice.actions
 export const weatherForecastReducer = weatherForecastSlice.reducer
