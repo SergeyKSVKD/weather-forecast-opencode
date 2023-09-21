@@ -45,3 +45,32 @@
     display: grid;
     text-align: left;
 }
+
+@media (max-width: 700px) {
+    .weatherForecastCardContainer {
+        padding: 10px;
+        p {
+            line-height: 16px;
+        }
+    }
+    .weatherForecastCardAdvancedContainer {
+        grid-template-columns: repeat(3, 100px);
+        gap: 10px;
+        align-items: center;
+        justify-content: center;
+        font-weight: var(--fw-light);
+    }
+    .weatherForecastCardAdvanced {
+        text-align: left;
+        font-size: 10px;
+    }
+    .mainTitle {
+        font-size: 12px !important;
+    }
+    .subTitle {
+        font-size: 10px !important;
+            img {
+                width: 50px;
+            }
+    }
+}

@@ -1,6 +1,7 @@
 import citiesList from '../../../../shared/cities.json'
 import styles from './search-control-view.module.scss'
 import cn from 'classnames'
+import { ReactComponent as CloseIcon } from '../../ui-blocks/assets/close.svg'
 import { useState, useEffect, useRef } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import { removeParams } from '../../features/store-slice/applicationParamsSlice'
@@ -151,7 +152,7 @@ export const SearchControlView = () => {
                     type='text' placeholder='Введите регион РФ'
                     value={region} name='region' autoComplete="off"
                     onFocus={() => changeActiveSelect({
-                        ...activeSelect,
+                        city: false,
                         region: true,
                     })}
                     onChange={(e) => {
@@ -168,8 +169,10 @@ export const SearchControlView = () => {
                     onClick={e => stopEventBubbling(e)}
                 />
                 <span className={styles.close__button}
-                    onClick={removeAllActivity}
-                >&#10006;</span>
+                    onClick={removeAllActivity}>
+                <CloseIcon />
+                {/* &#10006;*/}
+                </span>
             </div>
             <div className={cn(styles.select__container, {
                 [styles.active]: activeSelect.region
@@ -206,15 +209,17 @@ export const SearchControlView = () => {
                         setCity(e.target.value)
                     }}
                     onFocus={() => changeActiveSelect({
-                        ...activeSelect,
+                        region: false,
                         city: true,
                     })}
                     disabled={activeCitySelector ? '' : 'disabled'}
                     onClick={e => stopEventBubbling(e)}
                 />
                 <span className={styles.close__button}
-                    onClick={removeAllCityActivity}
-                >&#10006;</span>
+                    onClick={removeAllCityActivity}>
+                <CloseIcon />
+                {/* &#10006; */}
+                </span>
             </div>
             <div className={cn(styles.select__container, {
                 [styles.active]: activeSelect.city

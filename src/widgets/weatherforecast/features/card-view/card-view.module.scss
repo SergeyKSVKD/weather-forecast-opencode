@@ -3,3 +3,9 @@
     font-size: var(--fs-md);
     font-weight: var(--fw-bold);
 }
+
+@media (max-width: 700px) {
+    .error__container {
+        font-size: var(--fs-sm);
+    }
+}

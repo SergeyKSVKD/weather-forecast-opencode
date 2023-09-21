@@ -2,21 +2,31 @@ import { useSelector, useDispatch } from 'react-redux'
 import * as selectors from '../selectors'
 import { useEffect } from 'react'
 import { addActiveArrowButton } from '../store-slice/applicationParamsSlice'
+import { useResize } from '../../../../shared/helpers/useResize'
 
 export const useCarouselControl = () => {
+    let size = useResize().width
+    let slide
+    if (size < 700) {
+        slide = -120
+    }
+    else {
+        slide = -360
+    }
+
     const dispatch = useDispatch()
     const userParams = useSelector(selectors.userParams)
     let { start, end, count, slideTo } = userParams.sliderPosition
     let { left: leftArrow, right: rightArrow } = userParams.activeArrowButton
     const slideToRight = {
         count: count + 1,
-        slideTo: (count + 1) * (-360),
+        slideTo: (count + 1) * (slide),
         start: start + 3,
         end: end + 3,
     }
     const slideToLeft = {
         count: count - 1,
-        slideTo: (count - 1) * (-360),
+        slideTo: (count - 1) * (slide),
         start: start - 3,
         end: end - 3,
     }
@@ -49,6 +59,6 @@ export const useCarouselControl = () => {
     }, [start])
 
     return {
-       slideTo, leftArrow, rightArrow, slideToLeft, slideToRight, initial
+        slideTo, leftArrow, rightArrow, slideToLeft, slideToRight, initial
     }
 }

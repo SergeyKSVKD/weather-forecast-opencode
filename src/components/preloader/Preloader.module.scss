@@ -65,3 +65,14 @@
         transform: scale(0);
     }
 }
+
+@media (max-width: 600px) {
+    .loader {
+        width: 300px;
+    }
+    @for $i from 1 through 19 {
+        .loader .dot#{$i} {
+            transform: translateX(15px * $i);
+        }
+    }
+}

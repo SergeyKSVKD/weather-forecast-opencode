@@ -15,7 +15,18 @@
     position: absolute;
     top: 4px;
     left: 275px;
+    // color: transparent;
+    // z-index: 10;
     color: rgba(255,255,255,0.8);
+    // text-shadow: 0 0 0 rgba(255,255,255,0.8);
+        svg {
+            width: 24px;
+            height: 24px;
+            fill: rgba(255,255,255,0.8);
+            path {
+                stroke: rgba(255,255,255,0.8);;
+            }
+        }
         &:hover {
             cursor: pointer;
         }
@@ -106,4 +117,26 @@
 .activeElement {
     background-color: var(--orange);
     border-radius: 4px;
+}
+
+@media (max-width: 700px) {
+    .search__container {
+        grid-template-columns: 1fr;
+        grid-template-rows: repeat(2, auto) 140px;
+        align-items: center;
+        justify-items: center;
+        gap: 5px;
+        height: auto;
+    }
+    .select__container {
+        position: absolute;
+        top: 180px;
+        left: calc((max-width - 300px) / 2);
+            p {
+                font-size: 12px;
+            }
+    }
+    .select {
+        font-size: 12px;
+    }
 }
