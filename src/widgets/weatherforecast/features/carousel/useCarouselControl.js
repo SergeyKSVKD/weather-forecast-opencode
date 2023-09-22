@@ -1,18 +1,27 @@
 import { useSelector, useDispatch } from 'react-redux'
 import * as selectors from '../selectors'
-import { useEffect } from 'react'
-import { addActiveArrowButton } from '../store-slice/applicationParamsSlice'
-import { useResize } from '../../../../shared/helpers/useResize'
+import { useEffect, useState } from 'react'
 
-export const useCarouselControl = () => {
-    let size = useResize().width
-    let slide
-    if (size < 700) {
-        slide = -120
-    }
-    else {
-        slide = -360
-    }
+export const useCarouselControl = (theme, action) => {
+    const [slide, setSlide] = useState(0)
+    useEffect(() => {
+        if (action) {
+            dispatch(action.addSliderPosition(initial))
+            switch (theme) {
+                case 'large': {
+                    setSlide(-360)
+                }
+                    break
+                case 'small': {
+                    setSlide(-120)
+                }
+                    break
+                default: {
+                    setSlide(-360)
+                }
+            }
+        }
+    }, [theme])
 
     const dispatch = useDispatch()
     const userParams = useSelector(selectors.userParams)
@@ -38,23 +47,25 @@ export const useCarouselControl = () => {
     }
 
     useEffect(() => {
-        if (start <= 1) {
-            dispatch(addActiveArrowButton({
-                left: false,
-                right: true,
-            }))
-        }
-        if (start >= 34) {
-            dispatch(addActiveArrowButton({
-                left: true,
-                right: false,
-            }))
-        }
-        else if (2 < start < 34 && start != 1) {
-            dispatch(addActiveArrowButton({
-                left: true,
-                right: true,
-            }))
+        if (action) {
+            if (start <= 1) {
+                dispatch(action.addActiveArrowButton({
+                    left: false,
+                    right: true,
+                }))
+            }
+            if (start >= 34) {
+                dispatch(action.addActiveArrowButton({
+                    left: true,
+                    right: false,
+                }))
+            }
+            else if (2 < start < 34 && start !== 1) {
+                dispatch(action.addActiveArrowButton({
+                    left: true,
+                    right: true,
+                }))
+            }
         }
     }, [start])
 

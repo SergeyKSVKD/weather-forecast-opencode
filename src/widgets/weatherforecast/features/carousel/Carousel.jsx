@@ -1,20 +1,15 @@
 import styles from './carousel.module.scss'
 import cn from 'classnames'
-import * as selectors from '../selectors'
-import { addSliderPosition } from '../store-slice/applicationParamsSlice'
 import { ReactComponent as ArrowIcon } from '../../ui-blocks/assets/arrow.svg'
-import { useEffect, useState } from 'react'
-import { useSelector, useDispatch } from 'react-redux'
+import { useDispatch } from 'react-redux'
 import { format } from 'date-fns'
 import { ru } from 'date-fns/locale'
 import { useCarouselControl } from './useCarouselControl'
 import { addSelected } from '../store-slice/weatherForecastSlice'
 
-export const Carousel = () => {
+export const Carousel = ({ theme, data, action }) => {
     const dispatch = useDispatch()
-    const weatherForecast = useSelector(selectors.weatherForecast)
-    let { slideTo, leftArrow, rightArrow, slideToLeft, slideToRight } = useCarouselControl()
-    const [weatherForecastSlice, setWeatherForecastSlice] = useState([])
+    let { slideTo, leftArrow, rightArrow, slideToLeft, slideToRight } = useCarouselControl(theme, action)
 
     function dateFormat(date) {
         return format(new Date(date), 'dd MMMM', {
@@ -22,16 +17,12 @@ export const Carousel = () => {
         })
     }
 
-    useEffect(() => {
-        setWeatherForecastSlice(weatherForecast.list.slice(1, 40))
-    }, [weatherForecast])
-
     return <div className={styles.weatherForecastCardBriefContainer}>
         <ArrowIcon className={cn(styles.arrow, styles.rotate, {
             [styles.unactive]: leftArrow === false
         })}
             onClick={leftArrow ? () => {
-                dispatch(addSliderPosition(slideToLeft))
+                dispatch(action.addSliderPosition(slideToLeft))
             }
                 : null
             }
@@ -39,7 +30,7 @@ export const Carousel = () => {
         <div className={styles.fixedLeftPanel}></div>
         <div className={styles.weatherForecastCardBriefVisible}>
             <div className={styles.weatherForecastCardBrief} style={{ transform: `translateX(${slideTo}px)` }}>
-                {weatherForecastSlice.map((timeSlice, index) => {
+                {data.map((timeSlice, index) => {
                     return <div key={index} className={styles.brief}
                         onClick={() => {
                             dispatch(addSelected(timeSlice))
@@ -59,7 +50,7 @@ export const Carousel = () => {
             [styles.unactive]: rightArrow === false
         })}
             onClick={rightArrow ? () => {
-                dispatch(addSliderPosition(slideToRight))
+                dispatch(action.addSliderPosition(slideToRight))
             }
                 : null
             }

@@ -3,7 +3,7 @@ import { useSelector, useDispatch } from 'react-redux'
 import * as selectors from '../../features/selectors'
 import { format } from 'date-fns'
 import { ru } from 'date-fns/locale'
-import { addSliderPosition } from '../../features/store-slice/applicationParamsSlice'
+import { addSliderPosition, addActiveArrowButton } from '../../features/store-slice/applicationParamsSlice'
 import { motion } from 'framer-motion'
 import * as cardAnimation from '../../features/animations/weatherForecastCardAnimation'
 
@@ -12,6 +12,7 @@ import { Carousel } from '../../features/carousel/Carousel'
 import { useCarouselControl } from '../../features/carousel/useCarouselControl'
 import { useCurrent } from '../../features/get-current-weather/useCurrent'
 import { addCurrent } from '../../features/store-slice/weatherForecastSlice'
+import { useResize } from '../../../../shared/helpers/useResize'
 
 export const Card = ({ props: {
     query: { lat, lon },
@@ -24,6 +25,12 @@ export const Card = ({ props: {
     const weatherForecast = useSelector(selectors.weatherForecast)
     const selected = useSelector(selectors.selected)
     const [currentWeather, setcurrentWeather] = useState({})
+    const [weatherForecastSlice, setWeatherForecastSlice] = useState([])
+
+    useEffect(() => {
+        setWeatherForecastSlice(weatherForecast.list.slice(1, 40))
+    }, [weatherForecast])
+
     function dateFormat(date) {
         return format(new Date(date), 'dd MMMM', {
             locale: ru
@@ -78,6 +85,9 @@ export const Card = ({ props: {
                 : null}
         </div>
 
-        <Carousel />
+        {useResize().width <= 700 ?
+            <Carousel theme="small" data={weatherForecastSlice} action={{addSliderPosition, addActiveArrowButton}}/> :
+            <Carousel theme="large" data={weatherForecastSlice} action={{addSliderPosition, addActiveArrowButton}}/>
+        }
     </motion.div>
 }
