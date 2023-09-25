@@ -7,7 +7,7 @@ import { useSelector, useDispatch } from 'react-redux'
 import { removeParams } from '../../features/store-slice/applicationParamsSlice'
 import { loadWeatherForecast, removeWeatherForecast } from '../../features/store-slice/weatherForecastSlice'
 import { addRegions } from '../../features/store-slice/regionsSlice'
-import { addCities, addCity } from '../../features/store-slice/citiesSlice'
+import { addCities, addCity, removeCities } from '../../features/store-slice/citiesSlice'
 import * as selectors from '../../features/selectors'
 import { useDebounce } from '../../../../shared/helpers/index'
 import { useInputControl } from '../../features/input-control/useInputControl'
@@ -104,6 +104,7 @@ export const SearchControlView = () => {
             'lat': 0,
             'lon': 0,
         })
+        dispatch(removeCities())
         if (Object.entries(userParams).length !== 0) {
             dispatch(removeParams())
         }
@@ -117,6 +118,7 @@ export const SearchControlView = () => {
             'lat': 0,
             'lon': 0,
         })
+        dispatch(removeCities())
         if (Object.entries(userParams).length !== 0) {
             dispatch(removeParams())
         }
