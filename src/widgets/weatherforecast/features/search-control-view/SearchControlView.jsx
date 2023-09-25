@@ -26,8 +26,8 @@ export const SearchControlView = () => {
     const [city, setCity] = useState('')
     const debounceRegion = useDebounce(region, 500)
     const [activeCitySelector, changeActiveCitySelector] = useState(false)
-    
-    
+
+
     const scrollRef = useRef()
 
     function scrollToId(itemId) {
@@ -144,121 +144,139 @@ export const SearchControlView = () => {
         })
     }, [regions, region])
 
-    return <div className={styles.search__container}>
-        <div>
-            <div className={styles.input__container}>
-                <input className={styles.select}
-                    ref={inputRegionRef}
-                    type='text' placeholder='Введите регион РФ'
-                    value={region} name='region' autoComplete="off"
-                    onFocus={() => changeActiveSelect({
-                        city: false,
-                        region: true,
-                    })}
-                    onChange={(e) => {
-                        setRegion(e.target.value)
-                    }}
-                    onPaste={(e) => {
-                        e.preventDefault()
-                        setRegion(e.clipboardData.getData('Text'))
-                        if (e.clipboardData.getData('Text').length >= 4) {
-                            changeActiveCitySelector(true)
-                        }
-                        setRegions(() => filteredSlice.filter(item => item.toLocaleLowerCase().includes(e.clipboardData.getData('Text').toLocaleLowerCase())))
-                    }}
-                    onClick={e => stopEventBubbling(e)}
-                />
-                <span className={styles.close__button}
-                    onClick={removeAllActivity}>
-                <CloseIcon />
-                {/* &#10006;*/}
-                </span>
-            </div>
-            <div className={cn(styles.select__container, {
-                [styles.active]: activeSelect.region
-            })}
-                onClick={e => stopEventBubbling(e)}
+    return <>
+        <div className={styles.geolocation__container}>
+            <div className={styles.geolocation__button}
+                onClick={() => {
+                    navigator.geolocation.getCurrentPosition(position => {
+                        const { latitude, longitude } = position.coords
+                        dispatch(loadWeatherForecast({
+                            'lat': latitude,
+                            'lon': longitude,
+                        }))
+                    })
+                }}
             >
-                {regions.map((region, index) => {
-                    return <p key={index + 1}
-                        data-region={region}
-                        onClick={() => {
-                            setRegion(region)
-                            changeActiveCitySelector(true)
-                            setCity('')
-                            setRegions(() => filteredSlice.filter(item => item.toLocaleLowerCase().includes(region.toLocaleLowerCase())))
-                            changeActiveSelect({
-                                ...activeSelect,
-                                region: false,
-                            })
-                        }}
-                    >{region}</p>
-                })}
+                Погода с использованием службы геолокации
             </div>
         </div>
-        <div>
-            <div className={styles.input__container}>
-                <input className={cn(styles.select, {
-                    [styles.disabled]: !activeCitySelector
-                })}
-                    ref={inputCityRef}
-                    type='text' placeholder='Выберите город'
-                    value={city} name='city' autoComplete="off"
-                    readOnly="readonly"
-                    onChange={(e) => {
-                        setCity(e.target.value)
-                    }}
-                    onFocus={() => changeActiveSelect({
-                        region: false,
-                        city: true,
-                    })}
-                    disabled={activeCitySelector ? '' : 'disabled'}
-                    onClick={e => stopEventBubbling(e)}
-                />
-                <span className={styles.close__button}
-                    onClick={removeAllCityActivity}>
-                <CloseIcon />
-                {/* &#10006; */}
-                </span>
-            </div>
-            <div className={cn(styles.select__container, {
-                [styles.active]: activeSelect.city
-            })}
-                onClick={e => stopEventBubbling(e)}
-            >
-                {cities ? cities.map((city, index) => {
-                    return <p key={index + 1}
-                        ref={(node) => {
-                            const map = getMap();
-                            if (node) {
-                                map.set(city['Город'], node);
-                            } else {
-                                map.delete(city['Город']);
+
+        <div className={styles.search__container}>
+            <div>
+                <div className={styles.input__container}>
+                    <input className={styles.select}
+                        ref={inputRegionRef}
+                        type='text' placeholder='Введите регион РФ'
+                        value={region} name='region' autoComplete="off"
+                        onFocus={() => changeActiveSelect({
+                            city: false,
+                            region: true,
+                        })}
+                        onChange={(e) => {
+                            setRegion(e.target.value)
+                        }}
+                        onPaste={(e) => {
+                            e.preventDefault()
+                            setRegion(e.clipboardData.getData('Text'))
+                            if (e.clipboardData.getData('Text').length >= 4) {
+                                changeActiveCitySelector(true)
                             }
+                            setRegions(() => filteredSlice.filter(item => item.toLocaleLowerCase().includes(e.clipboardData.getData('Text').toLocaleLowerCase())))
                         }}
-                        data-city={city['Город']}
-                        onClick={() => {
-                            dispatch(addCity(city))
-                            setTimeout(() => {
-                                setCity(city['Город'])
-                                setQuery({
-                                    'lat': city['Широта'],
-                                    'lon': city['Долгота'],
-                                })
-                                scrollToId(city['Город'])
-                                dispatch(removeParams())
-                            }, [0])
-                            setTimeout(() => {
+                        onClick={e => stopEventBubbling(e)}
+                    />
+                    <span className={styles.close__button}
+                        onClick={removeAllActivity}>
+                        <CloseIcon />
+                        {/* &#10006;*/}
+                    </span>
+                </div>
+                <div className={cn(styles.select__container, {
+                    [styles.active]: activeSelect.region
+                })}
+                    onClick={e => stopEventBubbling(e)}
+                >
+                    {regions.map((region, index) => {
+                        return <p key={index + 1}
+                            data-region={region}
+                            onClick={() => {
+                                setRegion(region)
+                                changeActiveCitySelector(true)
+                                setCity('')
+                                setRegions(() => filteredSlice.filter(item => item.toLocaleLowerCase().includes(region.toLocaleLowerCase())))
                                 changeActiveSelect({
+                                    ...activeSelect,
                                     region: false,
-                                    city: false,
                                 })
-                            }, [200])
+                            }}
+                        >{region}</p>
+                    })}
+                </div>
+            </div>
+            <div>
+                <div className={styles.input__container}>
+                    <input className={cn(styles.select, {
+                        [styles.disabled]: !activeCitySelector
+                    })}
+                        ref={inputCityRef}
+                        type='text' placeholder='Выберите город'
+                        value={city} name='city' autoComplete="off"
+                        readOnly="readonly"
+                        onChange={(e) => {
+                            setCity(e.target.value)
                         }}
-                    >{city['Город']}</p>
-                }) : null
-                }
+                        onFocus={() => changeActiveSelect({
+                            region: false,
+                            city: true,
+                        })}
+                        disabled={activeCitySelector ? '' : 'disabled'}
+                        onClick={e => stopEventBubbling(e)}
+                    />
+                    <span className={styles.close__button}
+                        onClick={removeAllCityActivity}>
+                        <CloseIcon />
+                        {/* &#10006; */}
+                    </span>
+                </div>
+                <div className={cn(styles.select__container, {
+                    [styles.active]: activeSelect.city
+                })}
+                    onClick={e => stopEventBubbling(e)}
+                >
+                    {cities ? cities.map((city, index) => {
+                        return <p key={index + 1}
+                            ref={(node) => {
+                                const map = getMap();
+                                if (node) {
+                                    map.set(city['Город'], node);
+                                } else {
+                                    map.delete(city['Город']);
+                                }
+                            }}
+                            data-city={city['Город']}
+                            onClick={() => {
+                                dispatch(addCity(city))
+                                setTimeout(() => {
+                                    setCity(city['Город'])
+                                    setQuery({
+                                        'lat': city['Широта'],
+                                        'lon': city['Долгота'],
+                                    })
+                                    scrollToId(city['Город'])
+                                    dispatch(removeParams())
+                                }, [0])
+                                setTimeout(() => {
+                                    changeActiveSelect({
+                                        region: false,
+                                        city: false,
+                                    })
+                                }, [200])
+                            }}
+                        >{city['Город']}</p>
+                    }) : null
+                    }
+                </div>
             </div>
         </div>
-    </div>
+    </>
 }

@@ -49,12 +49,12 @@ export const Card = ({ props: {
         <div className={styles.weatherForecastCardAdvancedContainer}>
             {lon !== 0 && lat !== 0 ?
                 <div className={styles.weatherForecastCardAdvanced}>
-                    <p className={styles.mainTitle}>{city}</p>
+                    <p className={styles.mainTitle}>{city || weatherForecast.city.name}</p>
                     <br />
                     <p className={styles.subTitle}>Население: <span>{population > weatherForecast.city.population ? population : weatherForecast.city.population}</span></p>
                     <br />
-                    <p className={styles.subTitle}>Широта: <span>{lat}</span></p>
-                    <p className={styles.subTitle}>Долгота: <span>{lon}</span></p>
+                    <p className={styles.subTitle}>Широта: <span>{lat || weatherForecast.city.coord.lat}</span></p>
+                    <p className={styles.subTitle}>Долгота: <span>{lon || weatherForecast.city.coord.lon}</span></p>
                 </div>
                 : null
             }

@@ -140,3 +140,22 @@
         font-size: 12px;
     }
 }
+
+.geolocation__container {
+    display: grid;
+    align-items: top;
+    justify-content: center;
+}
+
+.geolocation__button {
+    background: var(--background);
+    padding: 5px 20px;
+    margin-bottom: 10px;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    border-radius: 4px;
+    text-align: center;
+    color: var(--white);
+        &:hover {
+            cursor: pointer;
+        }
+}
