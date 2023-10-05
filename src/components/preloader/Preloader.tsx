@@ -1,7 +1,7 @@
 import styles from './Preloader.module.scss'
 
-const Preloader = () => {
-    const dot = []
+const Preloader: React.FC = () => {
+    const dot: {}[] = []
     for (let i = 1; i < 21; i++) {
         dot.push({})
     }

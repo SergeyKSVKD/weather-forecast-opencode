@@ -1,17 +1,32 @@
 import styles from './carousel.module.scss'
 import cn from 'classnames'
-import { ReactComponent as ArrowIcon } from '../../ui-blocks/assets/arrow.svg'
-import { useDispatch } from 'react-redux'
+import { ReactComponent as ArrowIcon } from 'widgets/weatherforecast/ui-blocks/assets/arrow.svg'
+import { useAppDispatch } from 'store/redux-hooks'
 import { format } from 'date-fns'
 import { ru } from 'date-fns/locale'
 import { useCarouselControl } from './useCarouselControl'
-import { addSelected } from '../store-slice/weatherForecastSlice'
+import { addSelected } from 'widgets/weatherforecast/features/store-slice/weatherForecastSlice'
+import { ActionCreatorWithPayload } from '@reduxjs/toolkit'
+import { IAppParams } from '../store-slice/applicationParamsSlice'
+import { WeatherForecast } from 'widgets/weatherforecast/types'
 
-export const Carousel = ({ theme, data, action }) => {
-    const dispatch = useDispatch()
+export interface CarouselProp {
+    theme: 'large' | 'small',
+    data: WeatherForecast[],
+    action: {
+        addSliderPosition: ActionCreatorWithPayload<IAppParams['sliderPosition']>,
+        addActiveSelect: ActionCreatorWithPayload<IAppParams['activeSelect']>,
+        addActiveArrowButton: ActionCreatorWithPayload<IAppParams['activeArrowButton']>
+    },
+}
+
+
+export const Carousel = ({ theme, data, action }: CarouselProp) => {
+
+    const dispatch = useAppDispatch()
     let { slideTo, leftArrow, rightArrow, slideToLeft, slideToRight } = useCarouselControl(theme, action)
 
-    function dateFormat(date) {
+    function dateFormat(date: string) {
         return format(new Date(date), 'dd MMMM', {
             locale: ru
         })
@@ -21,11 +36,11 @@ export const Carousel = ({ theme, data, action }) => {
         <ArrowIcon className={cn(styles.arrow, styles.rotate, {
             [styles.unactive]: leftArrow === false
         })}
-            onClick={leftArrow ? () => {
-                dispatch(action.addSliderPosition(slideToLeft))
-            }
-                : null
-            }
+            onClick={() => {
+                if (leftArrow) {
+                    dispatch(action.addSliderPosition(slideToLeft))
+                }
+            }}
         />
         <div className={styles.fixedLeftPanel}></div>
         <div className={styles.weatherForecastCardBriefVisible}>
@@ -49,11 +64,11 @@ export const Carousel = ({ theme, data, action }) => {
         <ArrowIcon className={cn(styles.arrow, {
             [styles.unactive]: rightArrow === false
         })}
-            onClick={rightArrow ? () => {
-                dispatch(action.addSliderPosition(slideToRight))
-            }
-                : null
-            }
+            onClick={() => {
+                if (rightArrow) {
+                    dispatch(action.addSliderPosition(slideToRight))
+                }
+            }}
         />
     </div>
 }

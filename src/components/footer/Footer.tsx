@@ -1,8 +1,8 @@
 import styles from './Footer.module.scss'
 import { format } from 'date-fns'
-import { useResize } from '../../shared/helpers/index'
+import { useResize } from 'shared/helpers/'
 
-export const Footer = () => {
+export const Footer: React.FC = () => {
 
     return <>
         <div className={styles.footer__wrapper}>

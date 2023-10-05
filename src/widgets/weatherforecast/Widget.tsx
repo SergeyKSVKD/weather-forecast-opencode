@@ -15,7 +15,9 @@ function Widget() {
           <CardView />
         </OverlayWF>
       </div>
-      <Footer className={styles.footer} />
+      <div className={styles.footer} >
+        <Footer />
+      </div>
     </div>
   );
 }

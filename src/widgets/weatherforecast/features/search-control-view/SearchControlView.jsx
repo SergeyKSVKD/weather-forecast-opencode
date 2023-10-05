@@ -4,13 +4,14 @@ import cn from 'classnames'
 import { ReactComponent as CloseIcon } from '../../ui-blocks/assets/close.svg'
 import { useState, useEffect, useRef } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
-import { removeParams } from '../../features/store-slice/applicationParamsSlice'
-import { loadWeatherForecast, removeWeatherForecast } from '../../features/store-slice/weatherForecastSlice'
-import { addRegions } from '../../features/store-slice/regionsSlice'
-import { addCities, addCity, removeCities } from '../../features/store-slice/citiesSlice'
-import * as selectors from '../../features/selectors'
+import { removeParams } from '../store-slice/applicationParamsSlice'
+import { addSelected, loadWeatherForecast, now, removeWeatherForecast } from '../store-slice/weatherForecastSlice'
+import { addRegions } from '../store-slice/regionsSlice'
+import { addCities, addCity, removeCities } from '../store-slice/citiesSlice'
+import * as selectors from '../selectors'
 import { useDebounce } from '../../../../shared/helpers/index'
-import { useInputControl } from '../../features/input-control/useInputControl'
+import { useInputControl } from '../input-control/useInputControl'
+// import { QueryProp } from 'widgets/weatherforecast/types'
 
 export const SearchControlView = () => {
     const dispatch = useDispatch()
@@ -46,6 +47,7 @@ export const SearchControlView = () => {
         return scrollRef.current;
     }
     const [activeSelect, changeActiveSelect] = useInputControl()
+
     const [query, setQuery] = useState({
         'lat': 0,
         'lon': 0,
@@ -152,6 +154,7 @@ export const SearchControlView = () => {
                 onClick={() => {
                     navigator.geolocation.getCurrentPosition(position => {
                         const { latitude, longitude } = position.coords
+                        dispatch(removeAllCityActivity)
                         dispatch(loadWeatherForecast({
                             'lat': latitude,
                             'lon': longitude,
@@ -259,6 +262,7 @@ export const SearchControlView = () => {
                             onClick={() => {
                                 dispatch(addCity(city))
                                 setTimeout(() => {
+                                    dispatch(addSelected(now))
                                     setCity(city['Город'])
                                     setQuery({
                                         'lat': city['Широта'],

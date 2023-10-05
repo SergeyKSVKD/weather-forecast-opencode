@@ -1,45 +1,53 @@
 import styles from './card.module.scss'
 import { useSelector, useDispatch } from 'react-redux'
-import * as selectors from '../../features/selectors'
+import * as selectors from 'widgets/weatherforecast/features/selectors'
 import { format } from 'date-fns'
 import { ru } from 'date-fns/locale'
-import { addSliderPosition, addActiveArrowButton } from '../../features/store-slice/applicationParamsSlice'
+import { addSliderPosition, addActiveArrowButton, addActiveSelect } from 'widgets/weatherforecast/features/store-slice/applicationParamsSlice'
 import { motion } from 'framer-motion'
-import * as cardAnimation from '../../features/animations/weatherForecastCardAnimation'
+import * as cardAnimation from 'widgets/weatherforecast/features/animations/weatherForecastCardAnimation'
 
 import { useState, useEffect } from 'react'
-import { Carousel } from '../../features/carousel/Carousel'
-import { useCarouselControl } from '../../features/carousel/useCarouselControl'
-import { useCurrent } from '../../features/get-current-weather/useCurrent'
-import { addCurrent } from '../../features/store-slice/weatherForecastSlice'
-import { useResize } from '../../../../shared/helpers/useResize'
+import { Carousel } from 'widgets/weatherforecast/features/carousel/Carousel'
+import { useCarouselControl } from 'widgets/weatherforecast/features/carousel/useCarouselControl'
+import { useCurrent } from 'widgets/weatherforecast/features/get-current-weather/useCurrent'
+import { addCurrent, addSelected, now } from 'widgets/weatherforecast/features/store-slice/weatherForecastSlice'
+import { useResize } from 'shared/helpers/useResize'
+import { WeatherForecast, CardProp } from 'widgets/weatherforecast/types'
 
 export const Card = ({ props: {
     query: { lat, lon },
     cityTitle: city,
     population, }
-}) => {
+}: CardProp) => {
     const dispatch = useDispatch()
     const { initial } = useCarouselControl()
     const current = useCurrent()
     const weatherForecast = useSelector(selectors.weatherForecast)
     const selected = useSelector(selectors.selected)
-    const [currentWeather, setcurrentWeather] = useState({})
-    const [weatherForecastSlice, setWeatherForecastSlice] = useState([])
+    const [currentWeather, setcurrentWeather] = useState<WeatherForecast>(now)
+    const [weatherForecastSlice, setWeatherForecastSlice] = useState<WeatherForecast[]>([])
+    
 
     useEffect(() => {
-        setWeatherForecastSlice(weatherForecast.list.slice(1, 40))
+        if (Object.hasOwn(weatherForecast, 'list')) {
+            setWeatherForecastSlice(weatherForecast.list.slice(1, 40))
+        }
     }, [weatherForecast])
 
-    function dateFormat(date) {
-        return format(new Date(date), 'dd MMMM', {
-            locale: ru
-        })
+    function dateFormat(date: string) {
+        if (date) {
+            return format(new Date(date), 'dd MMMM', {
+                locale: ru
+            })
+        }
     }
 
     useEffect(() => {
-        setcurrentWeather(current)
-        if (Object.keys(selected).length !== 0) {
+        if (current.dt !== 0) {
+            setcurrentWeather(current)
+        }
+        if (selected.dt !== 0) {
             setcurrentWeather(selected)
         }
     }, [current, selected])
@@ -47,7 +55,8 @@ export const Card = ({ props: {
     return <motion.div className={styles.weatherForecastCardContainer}
         variants={cardAnimation.variants} initial={cardAnimation.initial} animate={cardAnimation.animate}>
         <div className={styles.weatherForecastCardAdvancedContainer}>
-            {lon !== 0 && lat !== 0 ?
+            {
+            // lon !== 0 && lat !== 0 ?
                 <div className={styles.weatherForecastCardAdvanced}>
                     <p className={styles.mainTitle}>{city || weatherForecast.city.name}</p>
                     <br />
@@ -56,14 +65,15 @@ export const Card = ({ props: {
                     <p className={styles.subTitle}>Широта: <span>{lat || weatherForecast.city.coord.lat}</span></p>
                     <p className={styles.subTitle}>Долгота: <span>{lon || weatherForecast.city.coord.lon}</span></p>
                 </div>
-                : null
+                // : null
             }
-            {Object.keys(currentWeather).length !== 0 ?
+            {currentWeather.dt !== 0 ?
                 <>
                     <div className={styles.subTitle}>
                         <p
                             className={styles.nowButton}
                             onClick={() => {
+                                dispatch(addSelected(now))
                                 dispatch(addCurrent(current))
                                 dispatch(addSliderPosition(initial))
                             }}>Сейчас {format(new Date(), 'H:mm')}</p>
@@ -86,8 +96,8 @@ export const Card = ({ props: {
         </div>
 
         {useResize().width <= 700 ?
-            <Carousel theme="small" data={weatherForecastSlice} action={{addSliderPosition, addActiveArrowButton}}/> :
-            <Carousel theme="large" data={weatherForecastSlice} action={{addSliderPosition, addActiveArrowButton}}/>
+            <Carousel theme="small" data={weatherForecastSlice} action={{ addSliderPosition, addActiveArrowButton, addActiveSelect }} /> :
+            <Carousel theme="large" data={weatherForecastSlice} action={{ addSliderPosition, addActiveArrowButton, addActiveSelect }} />
         }
     </motion.div>
 }
