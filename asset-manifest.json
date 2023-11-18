@@ -1,7 +1,7 @@
 {
   "files": {
     "main.css": "/weather-forecast-opencode/static/css/main.acc1c2e4.css",
-    "main.js": "/weather-forecast-opencode/static/js/main.0f845200.js",
+    "main.js": "/weather-forecast-opencode/static/js/main.1c8152f6.js",
     "static/media/rubik-regular-webfont.ttf": "/weather-forecast-opencode/static/media/rubik-regular-webfont.373f5790685b301604a3.ttf",
     "static/media/rubik-regular-webfont.woff": "/weather-forecast-opencode/static/media/rubik-regular-webfont.711cb8755c94b51f807f.woff",
     "static/media/logo_white_cropped.png": "/weather-forecast-opencode/static/media/logo_white_cropped.4595304db3173f1f94c5.png",
@@ -11,10 +11,10 @@
     "static/media/umbrella.svg": "/weather-forecast-opencode/static/media/umbrella.441c08166f6d002d426b7ce01874fe05.svg",
     "static/media/close.svg": "/weather-forecast-opencode/static/media/close.fe9d3d6ef5d99674475ffc1689d4fa4b.svg",
     "main.acc1c2e4.css.map": "/weather-forecast-opencode/static/css/main.acc1c2e4.css.map",
-    "main.0f845200.js.map": "/weather-forecast-opencode/static/js/main.0f845200.js.map"
+    "main.1c8152f6.js.map": "/weather-forecast-opencode/static/js/main.1c8152f6.js.map"
   },
   "entrypoints": [
     "static/css/main.acc1c2e4.css",
-    "static/js/main.0f845200.js"
+    "static/js/main.1c8152f6.js"
   ]
 }
