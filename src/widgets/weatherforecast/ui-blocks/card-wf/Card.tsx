@@ -79,12 +79,12 @@ export const Card = ({ props: {
                             }}>Сейчас {format(new Date(), 'H:mm')}</p>
                         <p >{currentWeather.weather[0].description.slice(0, 1).toUpperCase() + currentWeather.weather[0].description.slice(1, currentWeather.weather[0].description.length)}</p>
                         <img src={`https://openweathermap.org/img/wn/` + currentWeather.weather[0].icon + `@2x.png`} alt={currentWeather.dt_txt} />
-                        <p ><span>+{' '}{currentWeather.main.temp.toFixed(1)}&deg;C</span></p>
+                        <p ><span>{' '}{currentWeather.main.temp.toFixed(1)}&deg;C</span></p>
                     </div>
                     <div className={styles.weatherForecastCardAdvanced}>
                         {<div key={'advanced'}>
                             <p>{dateFormat(currentWeather.dt_txt)}</p>
-                            <p>Ощущается как: <span>+{' '}{currentWeather.main.feels_like.toFixed(1)}&deg;C</span></p>
+                            <p>Ощущается как: <span>{' '}{currentWeather.main.feels_like.toFixed(1)}&deg;C</span></p>
                             <p>Давление: <span>{Math.ceil(currentWeather.main.grnd_level * 0.750064)} мм рт. ст.</span></p>
                             <p>Влажность: <span>{currentWeather.main.humidity}%</span></p>
                             <p>Ветер: <span>{currentWeather.wind.speed} м/с</span></p>

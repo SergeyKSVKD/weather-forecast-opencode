@@ -55,7 +55,7 @@ export const Carousel = ({ theme, data, action }: CarouselProp) => {
                         <p>{timeSlice.dt_txt.slice(10, 16)}</p>
                         <p>{timeSlice.weather[0].description}</p>
                         <img src={`https://openweathermap.org/img/wn/` + timeSlice.weather[0].icon + `.png`} alt={timeSlice.dt_txt} />
-                        <p>+{' '}{timeSlice.main.temp.toFixed(1)}&deg;C</p>
+                        <p>{' '}{timeSlice.main.temp.toFixed(1)}&deg;C</p>
                     </div>
                 })}
             </div>
